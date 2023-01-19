@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier
+_commit: '3100462'
+_src_path: gh:browniebroke/pypackage-template
+add_me_as_contributor: true
+copyright_year: '2023'
+documentation: true
+email: github@kroimon.de
+full_name: Stefan Rado
+github_username: kroimon
+initial_commit: false
+open_source_license: MIT
+package_name: skyrc_ble
+project_name: SkyRC BLE
+project_short_description: Control SkyRC MC3000 battery chargers via BLE
+project_slug: skyrc-ble
+run_poetry_install: true
+setup_github: false
+setup_pre_commit: true
+
