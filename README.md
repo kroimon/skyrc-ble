@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/kroimon/skyrc-ble/actions?query=workflow%3ACI">
-    <img src="https://img.shields.io/github/workflow/status/kroimon/skyrc-ble/CI/main?label=CI&logo=github&style=flat-square" alt="CI Status" >
+    <img src="https://img.shields.io/github/actions/workflow/status/kroimon/skyrc-ble/ci.yml?branch=main&label=CI&logo=github&style=flat-square" alt="CI Status" >
   </a>
   <a href="https://skyrc-ble.readthedocs.io">
     <img src="https://img.shields.io/readthedocs/skyrc-ble.svg?logo=read-the-docs&logoColor=fff&style=flat-square" alt="Documentation Status">
