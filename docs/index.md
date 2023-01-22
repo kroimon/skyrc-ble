@@ -17,6 +17,6 @@ contributing
 protocol
 ```
 
-```{include} ../../README.md
+```{include} ../README.md
 
 ```
