@@ -1,19 +1,20 @@
 # Welcome to SkyRC BLE documentation!
 
 ```{toctree}
-:caption: Installation & Usage
+:caption: Project Info
 :maxdepth: 2
 
 installation
 usage
+changelog
+contributing
 ```
 
 ```{toctree}
-:caption: Project Info
+:caption: Technical Details
 :maxdepth: 2
 
-changelog
-contributing
+protocol
 ```
 
 ```{include} ../../README.md
