@@ -58,6 +58,11 @@ class Mc3000:
         return self._ble_device.name or self._ble_device.address
 
     @property
+    def address(self) -> str:
+        """Get the address of the device."""
+        return self._ble_device.address
+
+    @property
     def is_connected(self) -> bool:
         """Get the connection state."""
         return self._client is not None
