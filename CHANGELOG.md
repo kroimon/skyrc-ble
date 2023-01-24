@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v1.0.0 (2023-01-24)
+### Feature
+* Add address property to Mc3000 class ([`d7c2d3b`](https://github.com/kroimon/skyrc-ble/commit/d7c2d3bbbf3a2019ee634db5f91b59828509f5ca))
+
+### Breaking
+* rename/move purely MC3000 related code ([`bc60769`](https://github.com/kroimon/skyrc-ble/commit/bc6076992ffe019d6f35ed329fa91f6563a18a6d))
+
 ## v0.2.0 (2023-01-24)
 ### Feature
 * Allow replacing the BLEDevice instance ([`6fa18f6`](https://github.com/kroimon/skyrc-ble/commit/6fa18f6c799b986807a2138610155a1fba407452))
