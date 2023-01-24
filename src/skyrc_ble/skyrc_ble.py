@@ -48,6 +48,10 @@ class Mc3000:
         self._packet_received: asyncio.Event = asyncio.Event()
         self._state: Mc3000State = Mc3000State()
 
+    def set_ble_device(self, ble_device: BLEDevice) -> None:
+        """Update the BLE device."""
+        self._ble_device = ble_device
+
     @property
     def name(self) -> str:
         """Get the name of the device."""
