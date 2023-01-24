@@ -11,16 +11,7 @@ from bleak.backends.service import BleakGATTCharacteristic
 from bleak.exc import BleakError
 from bleak_retry_connector import establish_connection
 
-from .const import (
-    CHANNEL_COUNT,
-    CHARACTERISTIC_UUID,
-    CMD_GET_BASIC_DATA,
-    CMD_GET_CHANNEL_DATA,
-    CMD_GET_VERSION_INFO,
-    CMD_START_CHARGE,
-    CMD_STOP_CHARGE,
-    PACKET_MAGIC,
-)
+from .const import MC3000_CHANNEL_COUNT, MC3000_CHARACTERISTIC_UUID
 from .models import (
     BatteryType,
     ChannelMode,
@@ -33,6 +24,15 @@ from .models import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+PACKET_MAGIC = 0x0F
+
+CMD_GET_CHANNEL_DATA = 0x55
+CMD_GET_VOLTAGE_CURVE = 0x56
+CMD_GET_VERSION_INFO = 0x57
+CMD_GET_BASIC_DATA = 0x61
+CMD_START_CHARGE = 0x05
+CMD_STOP_CHARGE = 0xFE
 
 STRUCT_GET_CHANNEL_DATA = Struct(">BBBBBHHHHBHB")
 STRUCT_GET_VERSION_INFO = Struct(">xxxxxxxxxxxxBBB")
@@ -102,7 +102,7 @@ class Mc3000:
                 )
 
                 await self._client.start_notify(
-                    CHARACTERISTIC_UUID, self._notification_callback
+                    MC3000_CHARACTERISTIC_UUID, self._notification_callback
                 )
 
                 _LOGGER.debug(
@@ -140,7 +140,7 @@ class Mc3000:
 
         try:
             await self._send_packet(CMD_GET_BASIC_DATA)
-            for channel in range(0, CHANNEL_COUNT):
+            for channel in range(0, MC3000_CHANNEL_COUNT):
                 await self._send_packet(CMD_GET_CHANNEL_DATA, [channel])
 
         except BleakError as error:
@@ -149,13 +149,13 @@ class Mc3000:
 
     async def start_charge(self, channel: int) -> None:
         """Start charging the battery in the specified channel."""
-        if channel not in range(0, CHANNEL_COUNT):
+        if channel not in range(0, MC3000_CHANNEL_COUNT):
             raise ValueError("Invalid channel")
         await self._send_packet(CMD_START_CHARGE, [channel + 1])
 
     async def stop_charge(self, channel: int) -> None:
         """Stop charging the battery in the specified channel."""
-        if channel not in range(0, CHANNEL_COUNT):
+        if channel not in range(0, MC3000_CHANNEL_COUNT):
             raise ValueError("Invalid channel")
         await self._send_packet(CMD_STOP_CHARGE, [channel + 1])
 
@@ -174,7 +174,7 @@ class Mc3000:
         _LOGGER.debug("%s: Sending packet: %s", self.name, packet_bytes.hex())
         async with self._client_lock:
             self._packet_received.clear()
-            await self._client.write_gatt_char(CHARACTERISTIC_UUID, packet_bytes)
+            await self._client.write_gatt_char(MC3000_CHARACTERISTIC_UUID, packet_bytes)
             with suppress(TimeoutError):
                 await asyncio.wait_for(self._packet_received.wait(), 2)
 
@@ -228,7 +228,7 @@ class Mc3000:
                 resistance,
                 leds,
             ) = STRUCT_GET_CHANNEL_DATA.unpack_from(packet, 2)
-            if channel >= CHANNEL_COUNT:
+            if channel >= MC3000_CHANNEL_COUNT:
                 _LOGGER.warn(
                     "%s: Received channel data for invalid channel %d",
                     self.name,
@@ -280,6 +280,6 @@ class Mc3000:
     def _resolve_channel_led(self, value: int, channel: int) -> LedColor:
         if (value >> channel) & 1:
             return LedColor.RED
-        elif (value >> (channel + CHANNEL_COUNT)) & 1:
+        elif (value >> (channel + MC3000_CHANNEL_COUNT)) & 1:
             return LedColor.GREEN
         return LedColor.OFF

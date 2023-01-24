@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import IntEnum
 
-from .const import CHANNEL_COUNT
+from .const import MC3000_CHANNEL_COUNT
 
 
 class TemperatureUnit(IntEnum):
@@ -127,5 +127,5 @@ class Mc3000State:
     version_info: Mc3000VersionInfo | None = None
     basic_data: Mc3000BasicData | None = None
     channels: list[Mc3000ChannelData | None] = field(
-        default_factory=lambda: [None for _ in range(CHANNEL_COUNT)]
+        default_factory=lambda: [None for _ in range(MC3000_CHANNEL_COUNT)]
     )

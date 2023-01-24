@@ -2,7 +2,13 @@ from __future__ import annotations
 
 __version__ = "0.2.0"
 
-from .skyrc_ble import (
+from .const import (
+    MC3000_BLUETOOTH_NAMES,
+    MC3000_CHANNEL_COUNT,
+    MC3000_CHARACTERISTIC_UUID,
+    MC3000_SERVICE_UUID,
+)
+from .mc3000 import (
     Mc3000,
     Mc3000BasicData,
     Mc3000ChannelData,
@@ -11,6 +17,10 @@ from .skyrc_ble import (
 )
 
 __all__ = [
+    "MC3000_BLUETOOTH_NAMES",
+    "MC3000_SERVICE_UUID",
+    "MC3000_CHARACTERISTIC_UUID",
+    "MC3000_CHANNEL_COUNT",
     "Mc3000",
     "Mc3000BasicData",
     "Mc3000ChannelData",
