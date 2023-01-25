@@ -5,13 +5,12 @@ import logging
 from contextlib import suppress
 from struct import Struct
 
-from bleak import BleakClient
 from bleak.backends.device import BLEDevice
 from bleak.backends.service import BleakGATTCharacteristic
 from bleak.exc import BleakError
-from bleak_retry_connector import establish_connection
 
 from .const import MC3000_CHANNEL_COUNT, MC3000_CHARACTERISTIC_UUID
+from .device import SkyRcDevice
 from .models import (
     BatteryType,
     ChannelMode,
@@ -39,104 +38,27 @@ STRUCT_GET_VERSION_INFO = Struct(">xxxxxxxxxxxxBBB")
 STRUCT_GET_BASIC_DATA = Struct(">B?B?BH")
 
 
-class Mc3000:
+class Mc3000(SkyRcDevice[Mc3000State]):
     def __init__(self, ble_device: BLEDevice) -> None:
-        """Init the MC3000 device."""
-        self._ble_device = ble_device
-        self._client: BleakClient = None
-        self._client_lock: asyncio.Lock = asyncio.Lock()
-        self._packet_received: asyncio.Event = asyncio.Event()
-        self._state: Mc3000State = Mc3000State()
+        super().__init__(ble_device)
 
-    def set_ble_device(self, ble_device: BLEDevice) -> None:
-        """Update the BLE device."""
-        self._ble_device = ble_device
+        self._state = Mc3000State()
 
-    @property
-    def name(self) -> str:
-        """Get the name of the device."""
-        return self._ble_device.name or self._ble_device.address
-
-    @property
-    def address(self) -> str:
-        """Get the address of the device."""
-        return self._ble_device.address
-
-    @property
-    def is_connected(self) -> bool:
-        """Get the connection state."""
-        return self._client is not None
-
-    @property
-    def state(self) -> Mc3000State:
-        """Get the state of the device."""
-        return self._state
-
-    async def connect(self) -> None:
+    async def connect(self) -> bool:
         """Connect to the device."""
+        if result := await super().connect():
 
-        if self.is_connected or self._client_lock.locked():
-            return
-
-        async with self._client_lock:
-            try:
-                _LOGGER.debug(
-                    "%s: Connecting to address %s", self.name, self._ble_device.address
-                )
-
-                def disconnected_callback(
-                    client: BleakClient,
-                ) -> None:  # pylint: disable=unused-argument
-                    _LOGGER.warning(
-                        "%s: Disconnected from address %s",
-                        self.name,
-                        self._ble_device.address,
-                    )
-                    self._client = None
-
-                self._client = await establish_connection(
-                    client_class=BleakClient,
-                    device=self._ble_device,
-                    name=self.name,
-                    disconnected_callback=disconnected_callback,
-                )
-
+            async with self._client_lock:
                 await self._client.start_notify(
                     MC3000_CHARACTERISTIC_UUID, self._notification_callback
                 )
+            await self._send_packet(CMD_GET_VERSION_INFO)
 
-                _LOGGER.debug(
-                    "%s: Successfully connected to address %s",
-                    self.name,
-                    self._ble_device.address,
-                )
-
-            except BleakError:
-                _LOGGER.error(
-                    "%s: Failed to connect to address %s",
-                    self.name,
-                    self._ble_device.address,
-                )
-                self._client = None
-
-        await self._send_packet(CMD_GET_VERSION_INFO)
-
-    async def disconnect(self) -> None:
-        """Disconnect from the device."""
-        if self.is_connected:
-            async with self._client_lock:
-                _LOGGER.debug(
-                    "%s: Disconnecting from address %s",
-                    self.name,
-                    self._ble_device.address,
-                )
-                await self._client.disconnect()
+        return result
 
     async def update(self) -> None:
         """Update the state of the device."""
-
-        if not self.is_connected:
-            await self.connect()
+        await super().update()
 
         try:
             await self._send_packet(CMD_GET_BASIC_DATA)

@@ -8,6 +8,7 @@ from .const import (
     MC3000_CHARACTERISTIC_UUID,
     MC3000_SERVICE_UUID,
 )
+from .device import SkyRcDevice
 from .mc3000 import (
     Mc3000,
     Mc3000BasicData,
@@ -17,6 +18,7 @@ from .mc3000 import (
 )
 
 __all__ = [
+    "SkyRcDevice",
     "MC3000_BLUETOOTH_NAMES",
     "MC3000_SERVICE_UUID",
     "MC3000_CHARACTERISTIC_UUID",
