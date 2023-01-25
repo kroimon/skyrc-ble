@@ -39,6 +39,9 @@ STRUCT_GET_BASIC_DATA = Struct(">B?B?BH")
 
 
 class Mc3000(SkyRcDevice[Mc3000State]):
+
+    _model = "MC3000"
+
     def __init__(self, ble_device: BLEDevice) -> None:
         super().__init__(ble_device)
 

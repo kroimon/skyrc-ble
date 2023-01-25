@@ -14,6 +14,10 @@ _T = TypeVar("_T")
 
 
 class SkyRcDevice(Generic[_T]):
+
+    _manufacturer: str = "SkyRC"
+    _model: str = "Unknown"
+
     def __init__(self, ble_device: BLEDevice) -> None:
         """Init the SkyRC device."""
         self._ble_device = ble_device
@@ -25,6 +29,14 @@ class SkyRcDevice(Generic[_T]):
     def set_ble_device(self, ble_device: BLEDevice) -> None:
         """Update the BLE device."""
         self._ble_device = ble_device
+
+    @property
+    def manufacturer(self) -> str:
+        return self._manufacturer
+
+    @property
+    def model(self) -> str:
+        return self._model
 
     @property
     def name(self) -> str:
