@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "skyrc-ble"
-version = "1.0.0"
+version = "2.0.0"
 description = "Control SkyRC MC3000 battery chargers via BLE"
 authors = ["Stefan Rado <github@kroimon.de>"]
 license = "MIT"

@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v2.0.0 (2023-01-26)
+### Feature
+* Log timeout when waiting for response ([`b8129d8`](https://github.com/kroimon/skyrc-ble/commit/b8129d8b9dd673fe1fa3e9a1beac4e39d4e737f6))
+* Add manufacturer and model properties ([`bf9997e`](https://github.com/kroimon/skyrc-ble/commit/bf9997ed4c2b1575984f20911226d049e06455de))
+
+### Fix
+* Datatypes in basic state data must be enums ([`e369a32`](https://github.com/kroimon/skyrc-ble/commit/e369a32b1416a25d64ee688a6ca262ef111ed069))
+
+### Breaking
+* move version info to generic device ([`6ce40d1`](https://github.com/kroimon/skyrc-ble/commit/6ce40d171462f0ce7d843c23aa171ab43471ec67))
+
 ## v1.0.0 (2023-01-24)
 ### Feature
 * Add address property to Mc3000 class ([`d7c2d3b`](https://github.com/kroimon/skyrc-ble/commit/d7c2d3bbbf3a2019ee634db5f91b59828509f5ca))
