@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from contextlib import suppress
 from struct import Struct
 
 from bleak.backends.device import BLEDevice
@@ -99,8 +98,10 @@ class Mc3000(SkyRcDevice[Mc3000State]):
         async with self._client_lock:
             self._packet_received.clear()
             await self._client.write_gatt_char(MC3000_CHARACTERISTIC_UUID, packet_bytes)
-            with suppress(TimeoutError):
+            try:
                 await asyncio.wait_for(self._packet_received.wait(), 2)
+            except TimeoutError:
+                _LOGGER.warn("%s: Timeout waiting for response notification")
 
     async def _notification_callback(
         self, sender: BleakGATTCharacteristic, packet: bytearray
