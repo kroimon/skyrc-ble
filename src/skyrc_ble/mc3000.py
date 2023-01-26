@@ -14,10 +14,13 @@ from .models import (
     BatteryType,
     ChannelMode,
     ChannelStatus,
+    CoolingFanMode,
+    DisplayMode,
     LedColor,
     Mc3000BasicData,
     Mc3000ChannelData,
     Mc3000State,
+    TemperatureUnit,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -185,7 +188,12 @@ class Mc3000(SkyRcDevice[Mc3000State]):
                 input_voltage,
             ) = STRUCT_GET_BASIC_DATA.unpack_from(packet, 2)
             self._state.basic_data = Mc3000BasicData(
-                temp_unit, system_beep, display, screensaver, cooling_fan, input_voltage
+                TemperatureUnit(temp_unit),
+                system_beep,
+                DisplayMode(display),
+                screensaver,
+                CoolingFanMode(cooling_fan),
+                input_voltage / 1000.0,
             )
 
         elif packet[1] == CMD_GET_VERSION_INFO:
