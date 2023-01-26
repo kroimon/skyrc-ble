@@ -174,15 +174,6 @@ class Mc3000(SkyRcDevice[Mc3000State]):
             )
             return
 
-        elif packet[1] == CMD_GET_VERSION_INFO:
-            (
-                fw_version_major,
-                fw_version_minor,
-                hw_version,
-            ) = STRUCT_GET_VERSION_INFO.unpack_from(packet, 2)
-            self._sw_version = f"{fw_version_major}.{fw_version_minor}"
-            self._hw_version = f"{hw_version // 10}.{hw_version % 10}"
-
         elif packet[1] == CMD_GET_BASIC_DATA:
             (
                 temp_unit,
@@ -195,6 +186,15 @@ class Mc3000(SkyRcDevice[Mc3000State]):
             self._state.basic_data = Mc3000BasicData(
                 temp_unit, system_beep, display, screensaver, cooling_fan, input_voltage
             )
+
+        elif packet[1] == CMD_GET_VERSION_INFO:
+            (
+                fw_version_major,
+                fw_version_minor,
+                hw_version,
+            ) = STRUCT_GET_VERSION_INFO.unpack_from(packet, 2)
+            self._sw_version = f"{fw_version_major}.{fw_version_minor}"
+            self._hw_version = f"{hw_version // 10}.{hw_version % 10}"
 
         elif packet[1] not in [CMD_START_CHARGE, CMD_STOP_CHARGE]:
             _LOGGER.info("%s: Unknown packet type %d", self.name, packet[1])
