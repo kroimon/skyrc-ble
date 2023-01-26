@@ -23,6 +23,9 @@ async def run() -> None:
     _LOGGER.info("Found device: %r", device)
 
     mc3000 = Mc3000(device)
+    await mc3000.connect()
+    _LOGGER.info("Hardware version: %s", mc3000.hw_version)
+    _LOGGER.info("Software version: %s", mc3000.sw_version)
 
     await mc3000.update()
     _LOGGER.info("Current state: %r", mc3000.state)

@@ -81,13 +81,6 @@ class LedColor(IntEnum):
 
 
 @dataclass(frozen=True)
-class Mc3000VersionInfo:
-
-    fw_version: str = ""
-    hw_version: str = ""
-
-
-@dataclass(frozen=True)
 class Mc3000BasicData:
 
     temp_unit: TemperatureUnit = TemperatureUnit.CELSIUS
@@ -124,7 +117,6 @@ class Mc3000ChannelData:
 @dataclass
 class Mc3000State:
 
-    version_info: Mc3000VersionInfo | None = None
     basic_data: Mc3000BasicData | None = None
     channels: list[Mc3000ChannelData | None] = field(
         default_factory=lambda: [None for _ in range(MC3000_CHANNEL_COUNT)]

@@ -25,6 +25,8 @@ class SkyRcDevice(Generic[_T]):
         self._client_lock: asyncio.Lock = asyncio.Lock()
         self._packet_received: asyncio.Event = asyncio.Event()
         self._state: _T
+        self._hw_version: str = ""
+        self._sw_version: str = ""
 
     def set_ble_device(self, ble_device: BLEDevice) -> None:
         """Update the BLE device."""
@@ -47,6 +49,16 @@ class SkyRcDevice(Generic[_T]):
     def address(self) -> str:
         """Get the address of the device."""
         return self._ble_device.address
+
+    @property
+    def hw_version(self) -> str:
+        """Get the hardware version of the device."""
+        return self._hw_version
+
+    @property
+    def sw_version(self) -> str:
+        """Get the software version of the device."""
+        return self._sw_version
 
     @property
     def is_connected(self) -> bool:

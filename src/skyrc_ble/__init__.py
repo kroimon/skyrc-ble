@@ -9,13 +9,7 @@ from .const import (
     MC3000_SERVICE_UUID,
 )
 from .device import SkyRcDevice
-from .mc3000 import (
-    Mc3000,
-    Mc3000BasicData,
-    Mc3000ChannelData,
-    Mc3000State,
-    Mc3000VersionInfo,
-)
+from .mc3000 import Mc3000, Mc3000BasicData, Mc3000ChannelData, Mc3000State
 
 __all__ = [
     "SkyRcDevice",
@@ -27,5 +21,4 @@ __all__ = [
     "Mc3000BasicData",
     "Mc3000ChannelData",
     "Mc3000State",
-    "Mc3000VersionInfo",
 ]

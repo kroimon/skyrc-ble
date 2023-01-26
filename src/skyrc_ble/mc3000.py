@@ -19,7 +19,6 @@ from .models import (
     Mc3000BasicData,
     Mc3000ChannelData,
     Mc3000State,
-    Mc3000VersionInfo,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -181,10 +180,8 @@ class Mc3000(SkyRcDevice[Mc3000State]):
                 fw_version_minor,
                 hw_version,
             ) = STRUCT_GET_VERSION_INFO.unpack_from(packet, 2)
-            self._state.version_info = Mc3000VersionInfo(
-                f"{fw_version_major}.{fw_version_minor}",
-                f"{hw_version // 10}.{hw_version % 10}",
-            )
+            self._sw_version = f"{fw_version_major}.{fw_version_minor}"
+            self._hw_version = f"{hw_version // 10}.{hw_version % 10}"
 
         elif packet[1] == CMD_GET_BASIC_DATA:
             (
