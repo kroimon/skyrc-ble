@@ -40,7 +40,6 @@ STRUCT_GET_BASIC_DATA = Struct(">B?B?BH")
 
 
 class Mc3000(SkyRcDevice[Mc3000State]):
-
     _model = "MC3000"
 
     def __init__(self, ble_device: BLEDevice) -> None:
@@ -51,7 +50,6 @@ class Mc3000(SkyRcDevice[Mc3000State]):
     async def connect(self) -> bool:
         """Connect to the device."""
         if result := await super().connect():
-
             async with self._client_lock:
                 await self._client.start_notify(
                     MC3000_CHARACTERISTIC_UUID, self._notification_callback
@@ -77,13 +75,13 @@ class Mc3000(SkyRcDevice[Mc3000State]):
         """Start charging the battery in the specified channel."""
         if channel not in range(0, MC3000_CHANNEL_COUNT):
             raise ValueError("Invalid channel")
-        await self._send_packet(CMD_START_CHARGE, [channel + 1])
+        await self._send_packet(CMD_START_CHARGE, [1 << channel])
 
     async def stop_charge(self, channel: int) -> None:
         """Stop charging the battery in the specified channel."""
         if channel not in range(0, MC3000_CHANNEL_COUNT):
             raise ValueError("Invalid channel")
-        await self._send_packet(CMD_STOP_CHARGE, [channel + 1])
+        await self._send_packet(CMD_STOP_CHARGE, [1 << channel])
 
     async def _send_packet(self, command: int, payload: list[int] = []) -> None:
         """Send a packet to the device."""
