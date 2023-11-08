@@ -14,7 +14,6 @@ _T = TypeVar("_T")
 
 
 class SkyRcDevice(Generic[_T]):
-
     _manufacturer: str = "SkyRC"
     _model: str = "Unknown"
 

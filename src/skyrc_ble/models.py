@@ -82,7 +82,6 @@ class LedColor(IntEnum):
 
 @dataclass(frozen=True)
 class Mc3000BasicData:
-
     temp_unit: TemperatureUnit = TemperatureUnit.CELSIUS
     system_beep: bool = False
     display: DisplayMode = DisplayMode.OFF
@@ -93,7 +92,6 @@ class Mc3000BasicData:
 
 @dataclass(frozen=True)
 class Mc3000ChannelData:
-
     type: BatteryType = BatteryType.LIION
     mode: ChannelMode = ChannelMode.CHARGE
     count: int = 0
@@ -116,7 +114,6 @@ class Mc3000ChannelData:
 
 @dataclass
 class Mc3000State:
-
     basic_data: Mc3000BasicData | None = None
     channels: list[Mc3000ChannelData | None] = field(
         default_factory=lambda: [None for _ in range(MC3000_CHANNEL_COUNT)]
