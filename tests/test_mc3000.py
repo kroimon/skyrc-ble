@@ -17,7 +17,7 @@ from skyrc_ble.models import (
 
 @pytest.mark.asyncio
 async def test_mc3000_state(mock_mc3000_bleak):
-    ble_device = BLEDevice("00:01:02:03:04:05", "Charger")
+    ble_device = BLEDevice("00:01:02:03:04:05", "Charger", None, 0)
     mc3000 = Mc3000(ble_device)
 
     await mc3000.connect()
@@ -91,7 +91,7 @@ async def test_mc3000_state(mock_mc3000_bleak):
 
 @pytest.mark.asyncio
 async def test_mc3000_start_stop(mock_mc3000_bleak):
-    ble_device = BLEDevice("00:01:02:03:04:05", "Charger")
+    ble_device = BLEDevice("00:01:02:03:04:05", "Charger", None, 0)
     mc3000 = Mc3000(ble_device)
 
     await mc3000.connect()
