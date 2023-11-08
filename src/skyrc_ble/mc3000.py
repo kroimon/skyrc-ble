@@ -77,11 +77,29 @@ class Mc3000(SkyRcDevice[Mc3000State]):
             raise ValueError("Invalid channel")
         await self._send_packet(CMD_START_CHARGE, [1 << channel])
 
+    async def start_charge_multi(self, channels: int) -> None:
+        """Start charging the batteries in the specified channels.
+        The channels are specified in a bitfield where bits 0-3 represent channels 1-4
+        and multiple bits can be set at once.
+        """
+        if channels not in range(0, 1 << MC3000_CHANNEL_COUNT):
+            raise ValueError("Invalid channels")
+        await self._send_packet(CMD_START_CHARGE, [channels])
+
     async def stop_charge(self, channel: int) -> None:
         """Stop charging the battery in the specified channel."""
         if channel not in range(0, MC3000_CHANNEL_COUNT):
             raise ValueError("Invalid channel")
         await self._send_packet(CMD_STOP_CHARGE, [1 << channel])
+
+    async def stop_charge_multi(self, channels: int) -> None:
+        """Stop charging the batteries in the specified channels.
+        The channels are specified in a bitfield where bits 0-3 represent channels 1-4
+        and multiple bits can be set at once.
+        """
+        if channels not in range(0, 1 << MC3000_CHANNEL_COUNT):
+            raise ValueError("Invalid channels")
+        await self._send_packet(CMD_STOP_CHARGE, [channels])
 
     async def _send_packet(self, command: int, payload: list[int] = []) -> None:
         """Send a packet to the device."""
