@@ -14,10 +14,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: 3.x
       - uses: pre-commit/action@v3.0.0
 
   # Make sure commit messages follow the conventional commits convention:
@@ -26,10 +26,10 @@ jobs:
     name: Lint Commit Messages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v5.3.0
+      - uses: wagoid/commitlint-github-action@v5.4.4
 
   test:
     strategy:
@@ -43,12 +43,12 @@ jobs:
           - ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: snok/install-poetry@v1.3.3
+      - uses: snok/install-poetry@v1.3.4
       - name: Install Dependencies
         run: poetry install
         shell: bash
@@ -61,27 +61,45 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
-    runs-on: ubuntu-latest
-    environment: release
-    if: github.ref == 'refs/heads/main'
     needs:
       - test
       - lint
       - commitlint
 
+    runs-on: ubuntu-latest
+    environment: release
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
 
-      # Run semantic release:
-      # - Update CHANGELOG.md
-      # - Update version in code
-      # - Create git tag
-      # - Create GitHub release
-      # - Publish to PyPI
-      - name: Python Semantic Release
-        uses: relekang/python-semantic-release@v7.33.0
+      # Do a dry run of PSR
+      - name: Test release
+        uses: python-semantic-release/python-semantic-release@v8.3.0
+        if: github.ref_name != 'main'
+        with:
+          root_options: --noop
+
+      # On main branch: actual PSR + upload to PyPI & GitHub
+      - name: Release
+        uses: python-semantic-release/python-semantic-release@v8.3.0
+        id: release
+        if: github.ref_name == 'main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: steps.release.outputs.released == 'true'
+
+      - name: Publish package distributions to GitHub Releases
+        uses: python-semantic-release/upload-to-gh-release@main
+        if: steps.release.outputs.released == 'true'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -9,7 +9,7 @@
 project = "SkyRC BLE"
 copyright = "2023, Stefan Rado"
 author = "Stefan Rado"
-release = "0.0.0"
+release = "2.0.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

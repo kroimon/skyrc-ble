@@ -39,20 +39,29 @@ optional = true
 myst-parser = ">=0.16"
 sphinx = ">=4.0"
 sphinx-rtd-theme = ">=1.0"
+sphinx-autobuild = ">=2021.3.14"
 
 [tool.semantic_release]
 branch = "main"
-version_toml = "pyproject.toml:tool.poetry.version"
-version_variable = "src/skyrc_ble/__init__.py:__version__"
+version_toml = ["pyproject.toml:tool.poetry.version"]
+version_variables = [
+    "src/skyrc_ble/__init__.py:__version__",
+    "docs/conf.py:release",
+]
 build_command = "pip install poetry && poetry build"
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = [
+    "chore*",
+    "ci*",
+]
+
+[tool.semantic_release.changelog.environment]
+keep_trailing_newline = true
 
 [tool.pytest.ini_options]
 addopts = "-v -Wdefault --cov=skyrc_ble --cov-report=term-missing:skip-covered"
 pythonpath = ["src"]
-log_cli = true
-log_cli_level = "INFO"
-log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
-log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 [tool.coverage.run]
 branch = true
