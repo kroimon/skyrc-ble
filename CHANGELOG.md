@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.1.0 (2023-11-08)
+
+### Feature
+
+- Add functions to start/stop charging multiple channels at once ([`47d0eff`](https://github.com/kroimon/skyrc-ble/commit/47d0eff2c6a67c24be4f22b04131b3ad01bbab2f))
+
+### Documentation
+
+- Switch docs theme to furo ([`4513026`](https://github.com/kroimon/skyrc-ble/commit/451302663edbf01f9aa87570bedb2d29d0ad7348))
+- Fix changelog generation ([`f260cd9`](https://github.com/kroimon/skyrc-ble/commit/f260cd93d859fb7b4f2f0638d0cbce48a10e4cd4))
+
 ## v2.0.1 (2023-11-08)
 
 ### Build
